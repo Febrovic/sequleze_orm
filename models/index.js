@@ -18,15 +18,17 @@ Post.belongsTo(User);
 Post.belongsToMany(Tag, {through: PostTag});
 Tag.belongsToMany(Post, {through: PostTag});
 
-db.sync({ force: false })
+const ready = db.sync({ force: false })
     .then(() => {
         console.log('Database synced');
-    })
-    .catch((err) => {
-        console.error('Error syncing database:', err);
     });
 
+ready.catch((err) => {
+    console.error('Error syncing database:', err);
+});
+
 module.exports = {
+    ready,
     Category,
     Post,
     User,

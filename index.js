@@ -13,9 +13,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const db = require('./config/database');
+const { ready } = require('./models');
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
+});
+
+// Wait for the tables to exist before handling API requests (needed on Vercel cold starts)
+app.use('/api', async (req, res, next) => {
+  try {
+    await ready;
+    next();
+  } catch (err) {
+    console.error('Database not ready:', err);
+    res.status(500).json({ error: 'Database connection failed' });
+  }
 });
 
 app.use('/api/v1/posts', postsRouter);
