@@ -12,6 +12,6 @@ module.exports = new Sequalize(config.database, config.username, config.password
     dialectModule,
     logging: config.logging,
     dialectOptions: process.env.DB_SSL === 'true'
-        ? { ssl: { require: true, rejectUnauthorized: true, ca: process.env.DB_CA_CERT } }
+        ? { ssl: { require: true, rejectUnauthorized: true, ca: process.env.DB_CA_CERT?.replace(/\\n/g, '\n') } }
         : {},
 });
