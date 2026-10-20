@@ -26,7 +26,18 @@ app.use('/api', async (req, res, next) => {
     next();
   } catch (err) {
     console.error('Database not ready:', err);
-    res.status(500).json({ error: 'Database connection failed' });
+    // TEMP: show the reason while debugging the deployment; remove once it works
+    res.status(500).json({
+      error: 'Database connection failed',
+      details: err.message,
+      dialect: process.env.DIALECT,
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      database: process.env.DB_DATABASE,
+      ssl: process.env.DB_SSL,
+      hasCaCert: Boolean(process.env.DB_CA_CERT),
+      nodeEnv: process.env.NODE_ENV,
+    });
   }
 });
 
